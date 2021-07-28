@@ -1,10 +1,10 @@
 ﻿using MediatR;
+using MediatRSample.Core.Commands;
 using MediatRSample.Core.Queries;
 using MediatRSample.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -30,15 +30,16 @@ namespace MediatRSample.API.Controllers
 
         // GET api/<EmployeeController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<EmployeeEntity> Get(Guid id)
         {
-            return "value";
+            return await _mediator.Send(new GetEmployeeByIdQuery(id));
         }
 
         // POST api/<EmployeeController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<EmployeeEntity> Post([FromBody] EmployeeEntity employee)
         {
+            return await _mediator.Send(new CreateEmployeeCommand(employee.FirstName, employee.LastName));
         }
 
         // PUT api/<EmployeeController>/5
